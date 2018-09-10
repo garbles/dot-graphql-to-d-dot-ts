@@ -1,0 +1,17 @@
+{
+  "name": "dot-graphql-dot-ts",
+  "version": "0.0.0",
+  "description": "Generates TypeScript from .graphql files",
+  "main": "build/index.js",
+  "author": "Gabe Scholz",
+  "license": "MIT",
+  "dependencies": {
+    "@types/graphql": "^14.0.0",
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.9.4",
+    "graphql": "^14.0.2",
+    "jest": "^23.5.0",
+    "ts-jest": "^23.1.4",
+    "typescript": "^3.0.3"
+  }
+}
