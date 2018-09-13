@@ -1,0 +1,47 @@
+scalar Date
+
+enum UserType {
+  Admin
+  User
+  Guest
+}
+
+type User {
+  type: UserType
+  id: ID!
+  email: String!
+  age: Int
+  toys: [String]!
+  other: [String!]
+}
+
+type Query {
+  me: User!
+}
+
+input Thing {
+  id: ID!
+}
+
+schema {
+  query: Query
+}
+
+type Cat {
+  id: ID!
+  meow: String
+}
+
+type Dog {
+  id: ID!
+  woof: String
+}
+
+union Animal = Cat | Dog
+
+input MakeUser {
+  email: String!
+  age: Int
+  toys: [String]!
+  thing: Thing!
+}
