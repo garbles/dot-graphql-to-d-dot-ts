@@ -77,13 +77,12 @@ type UnionIR = {
   values: string[];
 };
 
-type IR = ScalarIR | ObjectIR | EnumIR | UnionIR;
-type IRs = { [name: string]: IR };
+export type IR = ScalarIR | ObjectIR | EnumIR | UnionIR;
 
-export default (schema: GraphQLSchema): IRs => {
+export default (schema: GraphQLSchema): IR[] => {
   const typeMap = schema.getTypeMap();
   const entries = Object.values(typeMap).filter(type => !isInternalKind(type.name));
-  const irs: IRs = {};
+  const irs: IR[] = [];
 
   for (const type of entries) {
     if (isScalarType(type)) {
@@ -93,7 +92,7 @@ export default (schema: GraphQLSchema): IRs => {
         value: getScalarValue(type.name)
       };
 
-      irs[type.name] = ir;
+      irs.push(ir);
       continue;
     }
 
@@ -129,7 +128,7 @@ export default (schema: GraphQLSchema): IRs => {
         ir.keyValues.push(keyValueIr);
       }
 
-      irs[type.name] = ir;
+      irs.push(ir);
       continue;
     }
 
@@ -140,7 +139,7 @@ export default (schema: GraphQLSchema): IRs => {
         values: type.getValues().map(v => v.value)
       };
 
-      irs[type.name] = ir;
+      irs.push(ir);
       continue;
     }
 
@@ -151,7 +150,7 @@ export default (schema: GraphQLSchema): IRs => {
         values: type.getTypes().map(t => t.name)
       };
 
-      irs[type.name] = ir;
+      irs.push(ir);
       continue;
     }
 

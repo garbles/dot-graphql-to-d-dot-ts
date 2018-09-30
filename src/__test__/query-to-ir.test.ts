@@ -9,5 +9,5 @@ test("builds an IR from a schema", () => {
 
   const result = queryToIR(source);
 
-  // console.log(JSON.stringify(result, null, 2));
+  console.log(JSON.stringify(result, null, 2));
 });
