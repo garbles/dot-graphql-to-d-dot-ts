@@ -1,0 +1,10 @@
+query MyQuery {
+  me {
+    id
+    email
+    age
+    cat {
+      meow
+    }
+  }
+}

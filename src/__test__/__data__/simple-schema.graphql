@@ -13,6 +13,7 @@ type User {
   age: Int
   toys: [String]!
   other: [String!]
+  cat: Cat
 }
 
 type Query {

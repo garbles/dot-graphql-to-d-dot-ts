@@ -17,9 +17,6 @@ import {
 import _ from "lodash";
 
 const internalKinds = [
-  "Query",
-  "Mutation",
-  "Subscription",
   "__Schema",
   "__Type",
   "__TypeKind",
