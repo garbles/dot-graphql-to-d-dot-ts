@@ -1,7 +1,9 @@
 import { parse, OperationDefinitionNode, SelectionSetNode } from "graphql";
 
-type IR = any;
-type IRs = { [name: string]: IR };
+export type IR = {
+  name: string;
+  selection: {};
+};
 
 const isOperationDefinitionNode = (obj: any): obj is OperationDefinitionNode =>
   obj.kind === "OperationDefinition";
@@ -14,21 +16,19 @@ const walkSelectionSet = (set: SelectionSetNode) =>
     return { ...acc, [fieldName]: value };
   }, {});
 
-export default (source: string) => {
+export default (source: string): IR[] => {
   const { definitions } = parse(source);
+  const irs: IR[] = [];
 
   for (const def of definitions) {
     if (isOperationDefinitionNode(def)) {
       // TODO: force name to be present
-      const queryName = def.name ? def.name.value : "Query";
+      const name = def.name ? def.name.value : "Query";
       const selection = walkSelectionSet(def.selectionSet);
 
-      console.log(queryName);
-      console.log(JSON.stringify(selection, null, 2));
-      console.log("==================================");
-      console.log("==================================");
-      console.log("==================================");
-      console.log("==================================");
+      irs.push({ name, selection });
     }
   }
+
+  return irs;
 };

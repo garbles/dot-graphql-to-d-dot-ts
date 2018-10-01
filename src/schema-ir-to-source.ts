@@ -1,12 +1,18 @@
 import prettier from "prettier";
 import { IR } from "./schema-to-ir";
 
-const queryResolverTypes = `
-type ResolveQueryValueType<T, O> = O extends true ? T : ResolveQueryType<T, O>;
+const typeUtils = `
+namespace TypeUtils {
+  // prettier-ignore
+  type Walk<T, O> = 
+    O extends true ? T :
+    T extends null ? T extends (null | infer N) ? Resolve<N, O> | null :
+    Resolve<T, O> : Resolve<T, O>;
 
-export type ResolveQueryType<T, O, K extends keyof T & keyof O = keyof T & keyof O> = {
-  [KK in K]: ResolveQueryValueType<T[KK], O[KK]>
-};
+  export type Resolve<T, O> = T extends null
+    ? never
+    : { [KK in keyof T & keyof O]: Walk<T[KK], O[KK]> };
+}
 `;
 
 export default (irs: IR[]): string => {
@@ -49,7 +55,7 @@ export default (irs: IR[]): string => {
     }
   }
 
-  const str = arr
+  const str = [typeUtils, ...arr]
     .map(v => `export ${v}`)
     .join("\n")
     .replace(/\n\s+\n/g, "\n");

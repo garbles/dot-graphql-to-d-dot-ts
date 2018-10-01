@@ -1,13 +1,14 @@
 import fs from "fs";
 import path from "path";
 import queryToIR from "../query-to-ir";
+import queryIRToSource from "../query-ir-to-source";
 
-test("builds an IR from a schema", () => {
+test("builds source from IR", async () => {
   const source = fs
     .readFileSync(path.join(__dirname, "./__data__/simple-query.graphql"))
     .toString();
 
-  const result = queryToIR(source);
+  const result = queryIRToSource(queryToIR(source), "./simple-schema");
 
-  // console.log(JSON.stringify(result, null, 2));
+  // console.log(result);
 });

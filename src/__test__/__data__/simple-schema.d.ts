@@ -1,25 +1,18 @@
-// prettier-ignore
-type ResolveQueryValueType<T, O> = O extends true ? T : ResolveQueryType<T, O>;
+export namespace TypeUtils {
+  // prettier-ignore
+  type Walk<T, O> = 
+    O extends true ? T :
+    T extends null ? T extends (null | infer N) ? Resolve<N, O> | null :
+    Resolve<T, O> : Resolve<T, O>;
 
-type ResolveQueryType<T, O, K extends keyof T & keyof O = keyof T & keyof O> = {
-  [KK in K]: ResolveQueryValueType<T[KK], O[KK]>
-};
-
-type Result = ResolveQueryType<
-  Query,
-  { you: true; me: { id: true; email: true; age: true; cat: { meow: true } } }
->;
-
-let r: Result;
-
-(() => {
-  const a = r.me.age;
-})();
+  export type Resolve<T, O> = T extends null
+    ? never
+    : { [KK in keyof T & keyof O]: Walk<T[KK], O[KK]> };
+}
 
 export interface Query {
   __typename: Query;
   me: User;
-  you: ID;
 }
 export interface User {
   __typename: User;
