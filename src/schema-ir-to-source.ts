@@ -3,15 +3,16 @@ import { IR } from "./schema-to-ir";
 
 const typeUtils = `
 namespace TypeUtils {
-  // prettier-ignore
-  type Walk<T, O> = 
-    O extends true ? T :
-    T extends null ? T extends (null | infer N) ? Resolve<N, O> | null :
-    Resolve<T, O> : Resolve<T, O>;
+  type Unwrap<T> = { [K in keyof T]: T[K] extends {} ? Unwrap<T[K]> : T[K] };
 
-  export type Resolve<T, O> = T extends null
-    ? never
-    : { [KK in keyof T & keyof O]: Walk<T[KK], O[KK]> };
+  type WalkA<T, O> = T extends null ? never : { [KK in keyof T & keyof O]: WalkB<T[KK], O[KK]> };
+
+  type WalkB<T, O> = 
+      O extends true ? T :
+      T extends null ? T extends (null | infer N) ? WalkA<N, O> | null :
+      WalkA<T, O> : WalkA<T, O>;
+
+  export type Resolve<T, O> = Unwrap<WalkA<T, O>>;
 }
 `;
 
